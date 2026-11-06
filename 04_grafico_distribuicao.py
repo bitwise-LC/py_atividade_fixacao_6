@@ -4,6 +4,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -11,14 +12,16 @@ BASE_DIR = Path(__file__).resolve().parent
 
 def main() -> None:
     dados = pd.read_csv(BASE_DIR / "data" / "dados_distribuicao.csv")
+    sns.set_theme(style="whitegrid")
 
     fig, ax = plt.subplots(figsize=(10, 6))
-    ax.hist(
-        dados["idade"],
+    sns.histplot(
+        data=dados,
+        x="idade",
         bins=12,
+        kde=True,
         color="#14B8A6",
-        edgecolor="white",
-        linewidth=1.2,
+        ax=ax,
     )
     ax.axvline(
         dados["idade"].mean(),
@@ -31,13 +34,13 @@ def main() -> None:
     ax.set_xlabel("Idade")
     ax.set_ylabel("Quantidade de clientes")
     ax.legend()
-    ax.grid(axis="y", alpha=0.25)
 
     fig.tight_layout()
     saida = BASE_DIR / "graficos" / "grafico_distribuicao.png"
     saida.parent.mkdir(exist_ok=True)
-    fig.savefig(saida, dpi=150, bbox_inches="tight")
+    fig.savefig(saida, dpi=300, bbox_inches="tight")
     plt.show()
+    plt.close(fig)
 
 
 if __name__ == "__main__":
